@@ -35,7 +35,7 @@ class LinkEntityTokenTest extends LinkBaseTestClass {
                                         $settings);
 
     // create page form
-    $this->drupalGet('node/add/page');
+    $this->backdropGet('node/add/page');
     //$field_name = 'field_' . $name;
     $this->assertField($field_name . '[und][0][title]', 'Title found');
     $this->assertField($field_name . '[und][0][url]', 'URL found');
@@ -61,20 +61,20 @@ class LinkEntityTokenTest extends LinkBaseTestClass {
     //$this->assert('pass', '<pre>' . print_r($token_url_tests, TRUE) . '<pre>');
 
     foreach ($token_url_tests as &$input) {
-      $this->drupalGet('node/add/page');
+      $this->backdropGet('node/add/page');
   
       $edit = array(
         'title' => $input['label'],
         $field_name . '[und][0][title]' => $input['label'],
         $field_name . '[und][0][url]' => $input['href'],
       );
-      $this->drupalPost(NULL, $edit, t('Save'));
+      $this->backdropPost(NULL, $edit, t('Save'));
       $url = $this->getUrl();
       $input['url'] = $url;
     }
 
     // change to anonymous user
-    $this->drupalLogout();
+    $this->backdropLogout();
     
     foreach ($token_url_tests as $index => $input2) {
       $node = node_load($index);
@@ -99,7 +99,7 @@ class LinkEntityTokenTest extends LinkBaseTestClass {
                                         $settings);
 
     // create page form
-    $this->drupalGet('node/add/page');
+    $this->backdropGet('node/add/page');
     //$field_name = 'field_' . $name;
     $this->assertField($field_name . '[und][0][title]', 'Title found');
     $this->assertField($field_name . '[und][0][url]', 'URL found');
@@ -125,20 +125,20 @@ class LinkEntityTokenTest extends LinkBaseTestClass {
     //$this->assert('pass', '<pre>' . print_r($token_url_tests, TRUE) . '<pre>');
 
     foreach ($token_url_tests as &$input) {
-      $this->drupalGet('node/add/page');
+      $this->backdropGet('node/add/page');
   
       $edit = array(
         'title' => $input['label'],
         $field_name . '[und][0][title]' => $input['label'],
         $field_name . '[und][0][url]' => $input['href'],
       );
-      $this->drupalPost(NULL, $edit, t('Save'));
+      $this->backdropPost(NULL, $edit, t('Save'));
       $url = $this->getUrl();
       $input['url'] = $url;
     }
 
     // change to anonymous user
-    $this->drupalLogout();
+    $this->backdropLogout();
     
     foreach ($token_url_tests as $index => $input2) {
       $node = node_load($index);

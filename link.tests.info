@@ -1,0 +1,65 @@
+[LinkBaseTestClass]
+name = Link base test file
+description =  Link base test
+group = Link
+file = tests/link.test
+
+[LinkAttributeCrudTest]
+name = Link Attribute test file
+description =  Tests options on link module
+group = Link
+file = tests/link.attribute.test
+
+[LinkContentCrudTest]
+name = Link CRUD test file
+description =  Basic CRUD simpletests for the link module
+group = Link
+file = tests/link.crud.test
+
+[LinkUITest]
+name = Link UI test file
+description =  Testing CRUD API in the browser
+group = Link
+file = tests/link.crud_browser.test
+
+[LinkEntityTokenTest]
+name = Link Entity token test file
+description =  Testing that tokens can be used in link titles
+group = Link
+file = tests/link.entity_token.test
+
+[LinkTokenTest]
+name = Link token test file
+description =  Testing that tokens can be used in link titles
+group = Link
+file = tests/link.token.test
+
+[LinkValidateTestCase]
+name = Link Validate test file
+description =  Tests that exercise the validation functions in the link module
+group = Link
+file = tests/link.validate.test
+
+[LinkValidateTest]
+name = Link Validate test base file
+description =  Testing that tokens can be used in link titles
+group = Link
+file = tests/link.validate.test
+
+[LinkValidateTestNews]
+name = Link Validate Test News file
+description =  Testing that tokens can be used in link titles
+group = Link
+file = tests/link.validate.test
+
+[LinkValidateSpecificURL]
+name = Link Validate Specific URL file
+description =  Testing that tokens can be used in link titles
+group = Link
+file = tests/link.validate.test
+
+[LinkValidateUrlLight]
+name = Link Validate URL test light file
+description =  Testing that tokens can be used in link titles
+group = Link
+file = tests/link.validate.test

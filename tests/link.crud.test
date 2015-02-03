@@ -5,7 +5,7 @@
  * Basic CRUD simpletests for the link module, based off of content.crud.test in CCK.
  */
 
-class LinkContentCrudTest extends DrupalWebTestCase {
+class LinkContentCrudTest extends BackdropWebTestCase {
 
   public static function getInfo() {
     return array(
@@ -29,10 +29,10 @@ class LinkContentCrudTest extends DrupalWebTestCase {
     $title = $this->randomName(20);
 
     // Create and login user.
-    $this->web_user = $this->drupalCreateUser(array('administer content types'));
-    $this->drupalLogin($this->web_user);
+    $this->web_user = $this->backdropCreateUser(array('administer content types'));
+    $this->backdropLogin($this->web_user);
 
-    $this->drupalGet('admin/structure/types');
+    $this->backdropGet('admin/structure/types');
 
     // Create the content type.
     $this->clickLink(t('Add content type'));
@@ -41,7 +41,7 @@ class LinkContentCrudTest extends DrupalWebTestCase {
       'name' => $content_type_friendly,
       'type' => $content_type_machine,
     );
-    $this->drupalPost(NULL, $edit, t('Save and add fields'));
+    $this->backdropPost(NULL, $edit, t('Save and add fields'));
     $this->assertText(t('The content type @name has been added.', array('@name' => $content_type_friendly)));
 
     // Now add a singleton field.
@@ -53,13 +53,13 @@ class LinkContentCrudTest extends DrupalWebTestCase {
       'fields[_add_new_field][type]' => 'link_field',
       'fields[_add_new_field][widget_type]' => 'link_field',
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->backdropPost(NULL, $edit, t('Save'));
 
     // We'll go with the default settings for this run-through.
-    $this->drupalPost(NULL, array(), t('Save field settings'));
+    $this->backdropPost(NULL, array(), t('Save field settings'));
 
     // Using all the default settings, so press the button.
-    $this->drupalPost(NULL, array(), t('Save settings'));
+    $this->backdropPost(NULL, array(), t('Save settings'));
     $this->assertText(t('Saved @name configuration.', array('@name' => $single_field_name_friendly)));
 
     // Somehow clicking "save" isn't enough, and we have to do a

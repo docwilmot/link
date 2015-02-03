@@ -25,7 +25,7 @@ class LinkValidateTestCase extends LinkBaseTestClass {
     $permission = 'create page content';
     $this->checkPermissions(array($permission), TRUE);
 
-    $this->drupalGet('node/add/page');
+    $this->backdropGet('node/add/page');
 
     $label = $this->randomName();
     $edit = array(
@@ -33,7 +33,7 @@ class LinkValidateTestCase extends LinkBaseTestClass {
       $field_name . '[und][0][title]' => $label,
       $field_name . '[und][0][url]' => $url,
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->backdropPost(NULL, $edit, t('Save'));
     $this->assertRaw(' has been created.', 'Node created');
 
     $nid = 1; //$matches[1];
@@ -62,13 +62,13 @@ class LinkValidateTest extends LinkValidateTestCase {
    * Test if we're stopped from posting a bad url on default validation.
    */
   function test_link_validate_bad_url_validate_default() {
-    $this->web_user = $this->drupalCreateUser(array('administer content types',
+    $this->web_user = $this->backdropCreateUser(array('administer content types',
                                              'administer nodes',
                                              'administer filters',
                                              'access content',
                                              'create page content',
                                              'access administration pages'));
-    $this->drupalLogin($this->web_user);
+    $this->backdropLogin($this->web_user);
 
     // create field
     $name = strtolower($this->randomName());
@@ -78,9 +78,9 @@ class LinkValidateTest extends LinkValidateTestCase {
       'fields[_add_new_field][type]' => 'link_field',
       'fields[_add_new_field][widget_type]' => 'link_field',
     );
-    $this->drupalPost('admin/structure/types/manage/page/fields', $edit, t('Save'));
-    $this->drupalPost(NULL, array(), t('Save field settings'));
-    $this->drupalPost(NULL, array(), t('Save settings'));
+    $this->backdropPost('admin/structure/types/manage/page/fields', $edit, t('Save'));
+    $this->backdropPost(NULL, array(), t('Save field settings'));
+    $this->backdropPost(NULL, array(), t('Save settings'));
 
     // Is field created?
     $this->assertRaw(t('Saved %label configuration', array('%label' => $name)), 'Field added');
@@ -88,7 +88,7 @@ class LinkValidateTest extends LinkValidateTestCase {
     menu_rebuild();
 
     // create page form
-    $this->drupalGet('node/add/page');
+    $this->backdropGet('node/add/page');
     $field_name = 'field_' . $name;
     $this->assertField('edit-field-' . $name . '-und-0-title', 'Title found');
     $this->assertField('edit-field-' . $name . '-und-0-url', 'URL found');
@@ -99,7 +99,7 @@ class LinkValidateTest extends LinkValidateTestCase {
       $field_name . '[und][0][url]' => 'edik:naw',
     );
 
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->backdropPost(NULL, $edit, t('Save'));
     $this->assertText(t('The value @value provided for @field is not a valid URL.', array('@value' => 'edik:naw', '@field' => $name)));
   }
 
@@ -107,13 +107,13 @@ class LinkValidateTest extends LinkValidateTestCase {
    * Test if we're stopped from posting a bad url with validation on.
    */
   function test_link_validate_bad_url_validate_on() {
-    $this->web_user = $this->drupalCreateUser(array('administer content types',
+    $this->web_user = $this->backdropCreateUser(array('administer content types',
                                              'administer nodes',
                                              'administer filters',
                                              'access content',
                                              'create page content',
                                              'access administration pages'));
-    $this->drupalLogin($this->web_user);
+    $this->backdropLogin($this->web_user);
 
     // create field
     $name = strtolower($this->randomName());
@@ -123,9 +123,9 @@ class LinkValidateTest extends LinkValidateTestCase {
       'fields[_add_new_field][type]' => 'link_field',
       'fields[_add_new_field][widget_type]' => 'link_field',
     );
-    $this->drupalPost('admin/structure/types/manage/page/fields', $edit, t('Save'));
-    $this->drupalPost(NULL, array(), t('Save field settings'));
-    $this->drupalPost(NULL, array('instance[settings][validate_url]' => TRUE), t('Save settings'));
+    $this->backdropPost('admin/structure/types/manage/page/fields', $edit, t('Save'));
+    $this->backdropPost(NULL, array(), t('Save field settings'));
+    $this->backdropPost(NULL, array('instance[settings][validate_url]' => TRUE), t('Save settings'));
 
     // Is field created?
     $this->assertRaw(t('Saved %label configuration', array('%label' => $name)), 'Field added');
@@ -133,7 +133,7 @@ class LinkValidateTest extends LinkValidateTestCase {
     menu_rebuild();
 
     // create page form
-    $this->drupalGet('node/add/page');
+    $this->backdropGet('node/add/page');
     $field_name = 'field_' . $name;
     $this->assertField('edit-field-' . $name . '-und-0-title', 'Title found');
     $this->assertField('edit-field-' . $name . '-und-0-url', 'URL found');
@@ -144,7 +144,7 @@ class LinkValidateTest extends LinkValidateTestCase {
       $field_name . '[und][0][url]' => 'edik:naw',
     );
 
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->backdropPost(NULL, $edit, t('Save'));
     $this->assertText(t('The value @value provided for @field is not a valid URL.', array('@field' => $name, '@value' => 'edik:naw')));
 
   }
@@ -153,13 +153,13 @@ class LinkValidateTest extends LinkValidateTestCase {
    * Test if we can post a bad url if the validation is expressly turned off.
    */
   function test_link_validate_bad_url_validate_off() {
-    $this->web_user = $this->drupalCreateUser(array('administer content types',
+    $this->web_user = $this->backdropCreateUser(array('administer content types',
                                              'administer nodes',
                                              'administer filters',
                                              'access content',
                                              'create page content',
                                              'access administration pages'));
-    $this->drupalLogin($this->web_user);
+    $this->backdropLogin($this->web_user);
 
     // create field
     $name = strtolower($this->randomName());
@@ -169,9 +169,9 @@ class LinkValidateTest extends LinkValidateTestCase {
       'fields[_add_new_field][type]' => 'link_field',
       'fields[_add_new_field][widget_type]' => 'link_field',
     );
-    $this->drupalPost('admin/structure/types/manage/page/fields', $edit, t('Save'));
-    $this->drupalPost(NULL, array(), t('Save field settings'));
-    $this->drupalPost(NULL, array('instance[settings][validate_url]' => FALSE), t('Save settings'));
+    $this->backdropPost('admin/structure/types/manage/page/fields', $edit, t('Save'));
+    $this->backdropPost(NULL, array(), t('Save field settings'));
+    $this->backdropPost(NULL, array('instance[settings][validate_url]' => FALSE), t('Save settings'));
 
     /*$instance_details = db_query("SELECT * FROM {field_config_instance} WHERE field_name = :field_name AND bundle = 'page'", array(':field_name' => 'field_'. $name))->fetchObject();
     $this->fail('<pre>'. print_r($instance_details, TRUE) .'</pre>');
@@ -183,7 +183,7 @@ class LinkValidateTest extends LinkValidateTestCase {
     menu_rebuild();
 
     // create page form
-    $this->drupalGet('node/add/page');
+    $this->backdropGet('node/add/page');
     $field_name = 'field_' . $name;
     $this->assertField('edit-field-' . $name . '-und-0-title', 'Title found');
     $this->assertField('edit-field-' . $name . '-und-0-url', 'URL found');
@@ -194,7 +194,7 @@ class LinkValidateTest extends LinkValidateTestCase {
       $field_name . '[und][0][url]' => 'edik:naw',
     );
 
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->backdropPost(NULL, $edit, t('Save'));
     $this->assertNoText(t('The value %value provided for %field is not a valid URL.', array('%field' => $name, '%value' => 'edik:naw')));
   }
 
@@ -203,13 +203,13 @@ class LinkValidateTest extends LinkValidateTestCase {
    */
   function x_test_link_validate_switching_between_validation_status() {
     $this->acquireContentTypes(1);
-    $this->web_user = $this->drupalCreateUser(array('administer content types',
+    $this->web_user = $this->backdropCreateUser(array('administer content types',
                                              'administer nodes',
                                              'access administration pages',
                                              'access content',
                                              'create ' . $this->content_types[0]->type . ' content',
                                              'edit any ' . $this->content_types[0]->type . ' content'));
-    $this->drupalLogin($this->web_user);
+    $this->backdropLogin($this->web_user);
     variable_set('node_options_' . $this->content_types[0]->name, array('status', 'promote'));
     $field_settings = array(
       'type' => 'link',
@@ -227,7 +227,7 @@ class LinkValidateTest extends LinkValidateTestCase {
 
     $node = node_load($this->nodes[0]->nid);
 
-    $this->drupalGet('node/' . $this->nodes[0]->nid);
+    $this->backdropGet('node/' . $this->nodes[0]->nid);
 
     $edit = array();
     $title = $this->randomName();
@@ -235,7 +235,7 @@ class LinkValidateTest extends LinkValidateTestCase {
     $edit[$field['field_name'] . '[0][url]'] = $url;
     $edit[$field['field_name'] . '[0][title]'] = $title;
 
-    $this->drupalPost('node/' . $this->nodes[0]->nid . '/edit', $edit, t('Save'));
+    $this->backdropPost('node/' . $this->nodes[0]->nid . '/edit', $edit, t('Save'));
     //$this->pass($this->content);
     $this->assertNoText(t('The value %value provided for %field is not a valid URL.', array('%field' => $name, '%value' => trim($url))));
 
@@ -243,17 +243,17 @@ class LinkValidateTest extends LinkValidateTestCase {
     $node = node_load($this->nodes[0]->nid, NULL, TRUE);
     $this->assertEqual($url, $node->{$field['field_name']}[0]['url']);
 
-    $this->drupalGet('node/' . $node->nid);
+    $this->backdropGet('node/' . $node->nid);
     $this->assertNoRaw($url, 'Make sure Javascript does not display.');
 
     // Turn the array validation back _on_.
     $edit = array('validate_url' => TRUE);
     $node_type_link = str_replace('_', '-', $node->type);
-    //$this->drupalGet('admin/content/node-type/'. $node_type_link .'/fields'); ///'. $field['field_name']);
+    //$this->backdropGet('admin/content/node-type/'. $node_type_link .'/fields'); ///'. $field['field_name']);
     //$this->fail($this->content);
-    $this->drupalPost('admin/content/node-type/' . $node_type_link . '/fields/' . $field['field_name'], $edit, t('Save field settings'));
+    $this->backdropPost('admin/content/node-type/' . $node_type_link . '/fields/' . $field['field_name'], $edit, t('Save field settings'));
 
-    $this->drupalGet('node/' . $node->nid);
+    $this->backdropGet('node/' . $node->nid);
     // This actually works because the display_url goes through the core
     // url() function.  But we should have a test that makes sure it continues
     // to work.
@@ -340,7 +340,7 @@ class LinkValidateSpecificURL extends LinkValidateTestCase {
   /**
    * Here, we're testing that a very long url is stored properly in the db.
    *
-   * Basicly, trying to test http://drupal.org/node/376818
+   * Basicly, trying to test http://backdrop.org/node/376818
    */
   function testLinkURLFieldIsBig() {
     $long_url = 'http://th.wikipedia.org/wiki/%E0%B9%82%E0%B8%A3%E0%B8%87%E0%B9%80%E0%B8%A3%E0%B8%B5%E0%B8%A2%E0%B8%99%E0%B9%80%E0%B8%9A%E0%B8%8D%E0%B8%88%E0%B8%A1%E0%B8%A3%E0%B8%B2%E0%B8%8A%E0%B8%B9%E0%B8%97%E0%B8%B4%E0%B8%A8_%E0%B8%99%E0%B8%84%E0%B8%A3%E0%B8%A8%E0%B8%A3%E0%B8%B5%E0%B8%98%E0%B8%A3%E0%B8%A3%E0%B8%A1%E0%B8%A3%E0%B8%B2%E0%B8%8A';
@@ -354,12 +354,12 @@ class LinkValidateSpecificURL extends LinkValidateTestCase {
  *
  * Validation is guided by the rules in http://tools.ietf.org/html/rfc1738 !
  */
-class LinkValidateUrlLight extends DrupalWebTestCase {
+class LinkValidateUrlLight extends BackdropWebTestCase {
 
   public static function getInfo() {
     return array(
       'name' => 'Link Light Validation Tests',
-      'description' => 'Tests the link_validate_url() function by itself, without invoking the full drupal/cck lifecycle.',
+      'description' => 'Tests the link_validate_url() function by itself, without invoking the full backdrop/cck lifecycle.',
       'group' => 'Link',
     );
   }
@@ -475,7 +475,7 @@ class LinkValidateUrlLight extends DrupalWebTestCase {
       //$this->assertEqual(TRUE, $valid2, "Using valid_url() on $link.");
     }
     // Test if we can make a tld valid:
-    variable_set('link_extra_domains', array('frog'));
+    config_set('link.settings', 'link_extra_domains', array('frog'));
     $valid = link_validate_url('http://www.example.frog');
     $this->assertEqual(LINK_EXTERNAL, $valid, "Testing that http://www.example.frog is a valid external link if we've added 'frog' to the list of valid domains.");
   }

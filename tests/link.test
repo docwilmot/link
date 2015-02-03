@@ -5,7 +5,7 @@
  * Link base test file - contains common functions for testing links.
  */
 
-class LinkBaseTestClass extends DrupalWebTestCase {
+class LinkBaseTestClass extends BackdropWebTestCase {
   protected $permissions = array(
     'access content',
     'administer content types',
@@ -24,8 +24,8 @@ class LinkBaseTestClass extends DrupalWebTestCase {
     $modules[] = 'link';
     parent::setUp($modules);
     
-    $this->web_user = $this->drupalCreateUser($this->permissions);
-    $this->drupalLogin($this->web_user);
+    $this->web_user = $this->backdropCreateUser($this->permissions);
+    $this->backdropLogin($this->web_user);
   }
 
   protected function createLinkField($node_type = 'page', $settings = array()) {
@@ -37,9 +37,9 @@ class LinkBaseTestClass extends DrupalWebTestCase {
       'fields[_add_new_field][widget_type]' => 'link_field',
     );
     $field_name = 'field_' . $name;
-    $this->drupalPost('admin/structure/types/manage/' . $node_type . '/fields', $edit, t('Save'));
-    $this->drupalPost(NULL, array(), t('Save field settings'));
-    $this->drupalPost(NULL, $settings, t('Save settings'));
+    $this->backdropPost('admin/structure/types/manage/' . $node_type . '/fields', $edit, t('Save'));
+    $this->backdropPost(NULL, array(), t('Save field settings'));
+    $this->backdropPost(NULL, $settings, t('Save settings'));
 
     // Is field created?
     $this->assertRaw(t('Saved %label configuration', array('%label' => $name)), 'Field added');

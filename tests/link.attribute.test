@@ -5,7 +5,7 @@
  * Basic simpletests to test options on link module.
  */
 
-class LinkAttributeCrudTest extends DrupalWebTestCase {
+class LinkAttributeCrudTest extends BackdropWebTestCase {
   private $zebra;
 
   protected $permissions = array(
@@ -31,8 +31,8 @@ class LinkAttributeCrudTest extends DrupalWebTestCase {
     parent::setup('field_ui', 'link');
     $this->zebra = 0;
     // Create and login user.
-    $this->web_user = $this->drupalCreateUser(array('administer content types'));
-    $this->drupalLogin($this->web_user);
+    $this->web_user = $this->backdropCreateUser(array('administer content types'));
+    $this->backdropLogin($this->web_user);
   }
 
   protected function createLink($url, $title, $attributes = array()) {
@@ -61,7 +61,7 @@ class LinkAttributeCrudTest extends DrupalWebTestCase {
     $content_type_machine = strtolower($this->randomName(10));
     $title = $this->randomName(20);
 
-    $this->drupalGet('admin/structure/types');
+    $this->backdropGet('admin/structure/types');
 
     // Create the content type.
     $this->clickLink(t('Add content type'));
@@ -70,7 +70,7 @@ class LinkAttributeCrudTest extends DrupalWebTestCase {
       'name' => $content_type_friendly,
       'type' => $content_type_machine,
     );
-    $this->drupalPost(NULL, $edit, t('Save and add fields'));
+    $this->backdropPost(NULL, $edit, t('Save and add fields'));
     $this->assertText(t('The content type @name has been added.', array('@name' => $content_type_friendly)));
 
     // Now add a singleton field.
@@ -84,13 +84,13 @@ class LinkAttributeCrudTest extends DrupalWebTestCase {
       'fields[_add_new_field][widget_type]' => 'link_field',
 
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->backdropPost(NULL, $edit, t('Save'));
 
     // We'll go with the default settings for this run-through.
-    $this->drupalPost(NULL, array(), t('Save field settings'));
+    $this->backdropPost(NULL, array(), t('Save field settings'));
 
     // Using all the default settings, so press the button.
-    $this->drupalPost(NULL, array(), t('Save settings'));
+    $this->backdropPost(NULL, array(), t('Save settings'));
     $this->assertText(t('Saved @name configuration.', array('@name' => $single_field_name_friendly)));
 
     // Somehow clicking "save" isn't enough, and we have to do a
@@ -108,23 +108,23 @@ class LinkAttributeCrudTest extends DrupalWebTestCase {
     // Now that we have a new content type, create a user that has privileges
     // on the content type.
     $permissions = array_merge($this->permissions, array($permission));
-    $this->web_user = $this->drupalCreateUser($permissions);
-    $this->drupalLogin($this->web_user);
+    $this->web_user = $this->backdropCreateUser($permissions);
+    $this->backdropLogin($this->web_user);
 
     // Go to page.
-    $this->drupalGet('node/add/' . $content_type_machine);
+    $this->backdropGet('node/add/' . $content_type_machine);
 
     // Add a node.
     $edit = array(
       'title' => $title,
       'field_' . $single_field_name_machine . '[und][0][title]' => 'Link',
-      'field_' . $single_field_name_machine . '[und][0][url]' => 'http://www.drupal.org/',
+      'field_' . $single_field_name_machine . '[und][0][url]' => 'http://www.backdrop.org/',
     );
 
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->backdropPost(NULL, $edit, t('Save'));
     $this->assertText(t('@content_type_friendly @title has been created', array('@content_type_friendly' => $content_type_friendly, '@title' => $title)));
 
-    $this->drupalGet('node/add/' . $content_type_machine);
+    $this->backdropGet('node/add/' . $content_type_machine);
 
     // Create a node:
     $edit = array(
@@ -134,7 +134,7 @@ class LinkAttributeCrudTest extends DrupalWebTestCase {
     );
 
     // Now we can fill in the second item in the multivalue field and save.
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->backdropPost(NULL, $edit, t('Save'));
     $this->assertText(t('@content_type_friendly @title has been created', array('@content_type_friendly' => $content_type_friendly, '@title' => $title)));
 
     $this->assertText('Display');
@@ -142,20 +142,20 @@ class LinkAttributeCrudTest extends DrupalWebTestCase {
   }
 
   protected function createSimpleLinkField($single_field_name_machine, $single_field_name_friendly, $content_type_machine) {
-    $this->drupalGet('admin/structure/types/manage/' . $content_type_machine . '/fields');
+    $this->backdropGet('admin/structure/types/manage/' . $content_type_machine . '/fields');
     $edit = array(
       'fields[_add_new_field][label]' => $single_field_name_friendly,
       'fields[_add_new_field][field_name]' => $single_field_name_machine,
       'fields[_add_new_field][type]' => 'link_field',
       'fields[_add_new_field][widget_type]' => 'link_field',
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->backdropPost(NULL, $edit, t('Save'));
 
     // We'll go with the default settings for this run-through.
-    $this->drupalPost(NULL, array(), t('Save field settings'));
+    $this->backdropPost(NULL, array(), t('Save field settings'));
 
     // Using all the default settings, so press the button.
-    $this->drupalPost(NULL, array(), t('Save settings'));
+    $this->backdropPost(NULL, array(), t('Save settings'));
     $this->assertText(t('Saved @name configuration.', array('@name' => $single_field_name_friendly)));
 
     // Somehow clicking "save" isn't enough, and we have to do a
@@ -175,12 +175,12 @@ class LinkAttributeCrudTest extends DrupalWebTestCase {
     // Now that we have a new content type, create a user that has privileges
     // on the content type.
     $permissions = array_merge($this->permissions, array($permission));
-    $this->web_user = $this->drupalCreateUser($permissions);
-    $this->drupalLogin($this->web_user);
+    $this->web_user = $this->backdropCreateUser($permissions);
+    $this->backdropLogin($this->web_user);
   }
 
   protected function createNodeForTesting($content_type_machine, $content_type_friendly, $single_field_name_machine, $title, $url, $node_title = '') {
-    $this->drupalGet('node/add/' . $content_type_machine);
+    $this->backdropGet('node/add/' . $content_type_machine);
 
     if (!$node_title) {
       $node_title = $this->randomName(20);
@@ -195,7 +195,7 @@ class LinkAttributeCrudTest extends DrupalWebTestCase {
       $edit['field_' . $single_field_name_machine . '[und][0][title]'] = $title;
     }
 
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->backdropPost(NULL, $edit, t('Save'));
     $this->assertText(t('@content_type_friendly @title has been created', array('@content_type_friendly' => $content_type_friendly, '@title' => $node_title)));
 
   }
@@ -207,7 +207,7 @@ class LinkAttributeCrudTest extends DrupalWebTestCase {
     $content_type_friendly = $this->randomName(20);
     $content_type_machine = strtolower($this->randomName(10));
 
-    $this->drupalCreateContentType(array(
+    $this->backdropCreateContentType(array(
       'type' => $content_type_machine,
       'name' => $content_type_friendly,
     ));
@@ -219,12 +219,12 @@ class LinkAttributeCrudTest extends DrupalWebTestCase {
     $this->createSimpleLinkField($single_field_name_machine, $single_field_name_friendly, $content_type_machine);
 
     // Okay, now we want to make sure this display is changed:
-    $this->drupalGet('admin/structure/types/manage/' . $content_type_machine . '/display');
+    $this->backdropGet('admin/structure/types/manage/' . $content_type_machine . '/display');
     $edit = array(
       'fields[field_' . $single_field_name_machine . '][label]' => 'above',
       'fields[field_' . $single_field_name_machine . '][type]' => 'link_plain',
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->backdropPost(NULL, $edit, t('Save'));
 
     $this->createNodeTypeUser($content_type_machine);
     
@@ -258,7 +258,7 @@ class LinkAttributeCrudTest extends DrupalWebTestCase {
     $content_type_friendly = $this->randomName(20);
     $content_type_machine = strtolower($this->randomName(10));
 
-    $this->drupalCreateContentType(array(
+    $this->backdropCreateContentType(array(
       'type' => $content_type_machine,
       'name' => $content_type_friendly,
     ));
@@ -270,12 +270,12 @@ class LinkAttributeCrudTest extends DrupalWebTestCase {
     $this->createSimpleLinkField($single_field_name_machine, $single_field_name_friendly, $content_type_machine);
 
     // Okay, now we want to make sure this display is changed:
-    $this->drupalGet('admin/structure/types/manage/' . $content_type_machine . '/display');
+    $this->backdropGet('admin/structure/types/manage/' . $content_type_machine . '/display');
     $edit = array(
       'fields[field_' . $single_field_name_machine . '][label]' => 'above',
       'fields[field_' . $single_field_name_machine . '][type]' => 'link_url',
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->backdropPost(NULL, $edit, t('Save'));
 
     $this->createNodeTypeUser($content_type_machine);
     
@@ -308,7 +308,7 @@ class LinkAttributeCrudTest extends DrupalWebTestCase {
     $content_type_friendly = $this->randomName(20);
     $content_type_machine = strtolower($this->randomName(10));
 
-    $this->drupalCreateContentType(array(
+    $this->backdropCreateContentType(array(
       'type' => $content_type_machine,
       'name' => $content_type_friendly,
     ));
@@ -320,12 +320,12 @@ class LinkAttributeCrudTest extends DrupalWebTestCase {
     $this->createSimpleLinkField($single_field_name_machine, $single_field_name_friendly, $content_type_machine);
 
     // Okay, now we want to make sure this display is changed:
-    $this->drupalGet('admin/structure/types/manage/' . $content_type_machine . '/display');
+    $this->backdropGet('admin/structure/types/manage/' . $content_type_machine . '/display');
     $edit = array(
       'fields[field_' . $single_field_name_machine . '][label]' => 'above',
       'fields[field_' . $single_field_name_machine . '][type]' => 'link_short',
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->backdropPost(NULL, $edit, t('Save'));
 
     $this->createNodeTypeUser($content_type_machine);
 
@@ -359,7 +359,7 @@ class LinkAttributeCrudTest extends DrupalWebTestCase {
     $content_type_friendly = $this->randomName(20);
     $content_type_machine = strtolower($this->randomName(10));
 
-    $this->drupalCreateContentType(array(
+    $this->backdropCreateContentType(array(
       'type' => $content_type_machine,
       'name' => $content_type_friendly,
     ));
@@ -371,12 +371,12 @@ class LinkAttributeCrudTest extends DrupalWebTestCase {
     $this->createSimpleLinkField($single_field_name_machine, $single_field_name_friendly, $content_type_machine);
 
     // Okay, now we want to make sure this display is changed:
-    $this->drupalGet('admin/structure/types/manage/' . $content_type_machine . '/display');
+    $this->backdropGet('admin/structure/types/manage/' . $content_type_machine . '/display');
     $edit = array(
       'fields[field_' . $single_field_name_machine . '][label]' => 'above',
       'fields[field_' . $single_field_name_machine . '][type]' => 'link_label',
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->backdropPost(NULL, $edit, t('Save'));
 
     $this->createNodeTypeUser($content_type_machine);
 
@@ -410,7 +410,7 @@ class LinkAttributeCrudTest extends DrupalWebTestCase {
     $content_type_friendly = $this->randomName(20);
     $content_type_machine = strtolower($this->randomName(10));
 
-    $this->drupalCreateContentType(array(
+    $this->backdropCreateContentType(array(
       'type' => $content_type_machine,
       'name' => $content_type_friendly,
     ));
@@ -422,12 +422,12 @@ class LinkAttributeCrudTest extends DrupalWebTestCase {
     $this->createSimpleLinkField($single_field_name_machine, $single_field_name_friendly, $content_type_machine);
 
     // Okay, now we want to make sure this display is changed:
-    $this->drupalGet('admin/structure/types/manage/' . $content_type_machine . '/display');
+    $this->backdropGet('admin/structure/types/manage/' . $content_type_machine . '/display');
     $edit = array(
       'fields[field_' . $single_field_name_machine . '][label]' => 'above',
       'fields[field_' . $single_field_name_machine . '][type]' => 'link_separate',
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->backdropPost(NULL, $edit, t('Save'));
 
     $this->createNodeTypeUser($content_type_machine);
 
@@ -462,7 +462,7 @@ class LinkAttributeCrudTest extends DrupalWebTestCase {
     $content_type_friendly = $this->randomName(20);
     $content_type_machine = strtolower($this->randomName(10));
     
-    $this->drupalCreateContentType(array(
+    $this->backdropCreateContentType(array(
       'type' => $content_type_machine,
       'name' => $content_type_friendly,
     ));
@@ -474,12 +474,12 @@ class LinkAttributeCrudTest extends DrupalWebTestCase {
     $this->createSimpleLinkField($single_field_name_machine, $single_field_name_friendly, $content_type_machine);
     
     // Okay, now we want to make sure this display is changed:
-    $this->drupalGet('admin/structure/types/manage/' . $content_type_machine . '/display');
+    $this->backdropGet('admin/structure/types/manage/' . $content_type_machine . '/display');
     $edit = array(
       'fields[field_' . $single_field_name_machine . '][label]' => 'above',
       'fields[field_' . $single_field_name_machine . '][type]' => 'link_title_plain',
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->backdropPost(NULL, $edit, t('Save'));
     
     $this->createNodeTypeUser($content_type_machine);
     
